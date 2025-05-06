@@ -8,34 +8,25 @@ import withReactContent from 'sweetalert2-react-content'; // Alertas con React
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Footer from './components/common/Footer';
+import Salas from './components/views/Salas';
+import PacientesSala from './components/views/PacientesSala';
+import Layout from './components/common/Layout';
 
 const MySwal = withReactContent(Swal); // Configuración de SweetAlert2 con React
 
 function App() {
-  const { register, handleSubmit } = useForm(); // Uso de react-hook-form
-
-  const showAlert = () => {
-    MySwal.fire({
-      title: "¡Éxito!",
-      text: "Operación completada",
-      icon: "success"
-    });
-  };
+  
 
   return (
     <>
+    <Layout>
       <Menu></Menu>
       <Routes>
-        <Route path="/" element={
-          <>
-            <h1>React con Bootstrap</h1>
-            <Button variant="primary" onClick={showAlert}>
-              <House className="me-2" /> Mostrar alerta
-            </Button>
-          </>
-        } />
+      <Route path="/" element={<Salas />} />
+      <Route path="/pacientes/:numeroSala" element={<PacientesSala />} />
       </Routes>
-      <Footer></Footer>
+      
+    </Layout>
     </>
   );
 }
