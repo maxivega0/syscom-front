@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-    <BrowserRouter>
+    {/* <BrowserRouter> */}
     <Layout>
       <Menu></Menu>
       <Routes>
@@ -30,7 +30,7 @@ function App() {
       </Routes>
       
     </Layout>
-    </BrowserRouter>
+    {/* </BrowserRouter> */}
     </>
   );
 }
