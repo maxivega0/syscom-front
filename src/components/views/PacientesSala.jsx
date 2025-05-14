@@ -1,8 +1,9 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
 import { PersonFill } from 'react-bootstrap-icons';
 import Menu from '../common/Menu';
+import styles from './PacientesSala.module.css'; 
 
 const PacientesSala = () => {
   const { numeroSala } = useParams();
@@ -46,9 +47,11 @@ const PacientesSala = () => {
           <Col xs={6} className="d-flex flex-column gap-3">
             {columna1.map((paciente) => (
               <Button
-                key={paciente.id}
+              key={paciente.id}
+              as={Link}
+              to={`/paciente/${paciente.nombre}`}
                 variant="light"
-                className="patient-button"
+                className={styles['patient-button']}
                 style={{ 
                   border: getBorderStyle(paciente.estado),
                   borderBottomWidth: '5px'
@@ -72,8 +75,10 @@ const PacientesSala = () => {
             {columna2.map((paciente) => (
               <Button
                 key={paciente.id}
+                as={Link}
+                to={`/paciente/${paciente.nombre}`}
                 variant="light"
-                className="patient-button"
+                className={styles['patient-button']}
                 style={{ 
                   border: getBorderStyle(paciente.estado),
                   borderBottomWidth: '5px'
@@ -93,25 +98,6 @@ const PacientesSala = () => {
           </Col>
         </Row>
       </Container>
-
-      {/* Estilos personalizados */}
-      <style jsx>{`
-        .patient-button {
-          height: 120px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 15px;
-          text-align: center;
-          background-color: white;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          transition: all 0.3s ease;
-        }
-        .patient-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-      `}</style>
     </>
   );
 };

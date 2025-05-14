@@ -1,6 +1,10 @@
 import React from 'react';
 import { Container, Button, Card, Row, Col, Badge } from 'react-bootstrap';
 import Menu from '../common/Menu';
+import styles from './Salas.module.css';
+import './Salas.module.css'
+
+
 
 const Salas = () => {
   // Datos de ejemplo
@@ -114,29 +118,7 @@ const Salas = () => {
         </Card>
       </Container>
 
-      {/* Estilos personalizados */}
-      <style jsx>{`
-        .square-btn {
-          aspect-ratio: 1/1;
-          height: 0;
-          padding-bottom: 100%;
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        .square-btn > div, 
-        .square-btn > span {
-          position: absolute;
-        }
-        .square-btn > div {
-          top: 30%;
-        }
-        .square-btn > span {
-          bottom: 30%;
-        }
-      `}</style>
+  
     </>
   );
 };
