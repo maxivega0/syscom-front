@@ -20,6 +20,7 @@ function App() {
 
   return (
     <>
+    <BrowserRouter>
     <Layout>
       <Menu></Menu>
       <Routes>
@@ -29,6 +30,7 @@ function App() {
       </Routes>
       
     </Layout>
+    </BrowserRouter>
     </>
   );
 }
