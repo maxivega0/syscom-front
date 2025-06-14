@@ -11,7 +11,7 @@ const PacienteDetalle = () => {
 
   // Datos de ejemplo
   const paciente = {
-    nombre: 'José Hernández',
+    nombre: nombrePaciente,
     diagnostico: 'Historia clínica',
     medicamentos: [
       { 
@@ -84,10 +84,14 @@ const PacienteDetalle = () => {
     <>
       <Container className="mt-4">
         {/* Encabezado del paciente */}
-        <div className="mb-4">
+        <div className="mb-4 d-flex justify-content-between">
+          <div>
           <h1>{paciente.nombre}</h1>
-          <Badge bg="info" className="fs-5 mb-2">{paciente.diagnostico}</Badge>
-          <h4 className="mt-3">Signos Vitales</h4>
+          </div>
+          <div className='d-flex flex-column'>
+          <Button bg="info" className="fs-5 mb-2">Historia Clinica</Button>
+          <Button className="mt-3">Signos Vitales</Button>
+          </div>
           <hr />
         </div>
 
@@ -98,7 +102,7 @@ const PacienteDetalle = () => {
           <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
-                <th>Horarios</th>
+                <th>Horarios</th>        
                 <th>Medicamento</th>
               </tr>
             </thead>
