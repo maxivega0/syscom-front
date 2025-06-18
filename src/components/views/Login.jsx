@@ -1,31 +1,29 @@
+// src/components/views/Login.jsx
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Card } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   // Usuario hardcodeado
   const hardcodedUser = {
     email: 'admin@syscom.com',
     password: 'syscom123',
-    username: 'Enfermero1'
+    username: 'Enfermero1',
+    role: 'admin' // Agregamos rol para manejar permisos
   };
 
   const onSubmit = (data) => {
     if (data.email === hardcodedUser.email && data.password === hardcodedUser.password) {
       // Guardar en sessionStorage
-      sessionStorage.setItem('user', JSON.stringify({
+      sessionStorage.setItem('usuario', JSON.stringify({
         username: hardcodedUser.username,
-        email: hardcodedUser.email
+        email: hardcodedUser.email,
+        role: hardcodedUser.role
       }));
 
       // Mostrar alerta de bienvenida
@@ -33,42 +31,35 @@ const Login = () => {
         title: '¡Bienvenido!',
         text: `Bienvenido ${hardcodedUser.username} a Syscom!`,
         icon: 'success',
-        confirmButtonText: 'Continuar',
-        background: '#f8f9fa',
-        confirmButtonColor: '#34AEFF',
+        confirmButtonText: 'Continuar'
       }).then(() => {
         // Redirigir al dashboard después del login
-        navigate('/salas');
+        navigate('/');
       });
     } else {
-      // Mostrar error si las credenciales son incorrectas
       Swal.fire({
         title: 'Error',
         text: 'Credenciales incorrectas',
         icon: 'error',
-        confirmButtonText: 'Entendido',
-        background: '#f8f9fa',
-        confirmButtonColor: '#34AEFF',
+        confirmButtonText: 'Entendido'
       });
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#f0f2f5' }}>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <Container className="d-flex justify-content-center">
         <Card style={{ width: '400px', border: 'none', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
           <Card.Body className="p-4">
             <div className="text-center mb-4">
-                <div>
-              <h2 className="text-primary">HOSPITAL</h2>
+              <h2 className="text-danger fw-bold">HOSPITAL</h2>
               <h4 className="text-secondary">SYSCOM</h4>
-                </div>
-              <h3 className="mt-4">Bienvenido</h3>
+              <h3 className="mt-4">¡Bienvenido!</h3>
             </div>
 
             <Form onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3">
-                <Form.Label>Usuario</Form.Label>
+                <Form.Label>Correo Electronico:</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Ingrese su email"
@@ -76,11 +67,11 @@ const Login = () => {
                     required: 'El email es requerido',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Email inválido (debe contener @ y dominio)'
+                      message: 'Email inválido'
                     },
                     maxLength: {
                       value: 50,
-                      message: 'El email no puede exceder los 50 caracteres'
+                      message: 'Máximo 50 caracteres'
                     }
                   })}
                   isInvalid={!!errors.email}
@@ -91,7 +82,7 @@ const Login = () => {
               </Form.Group>
 
               <Form.Group className="mb-4">
-                <Form.Label>Contraseña</Form.Label>
+                <Form.Label>Contraseña:</Form.Label>
                 <Form.Control
                   type="password"
                   placeholder="Ingrese su contraseña"
@@ -99,11 +90,11 @@ const Login = () => {
                     required: 'La contraseña es requerida',
                     minLength: {
                       value: 8,
-                      message: 'La contraseña debe tener al menos 8 caracteres'
+                      message: 'Mínimo 8 caracteres'
                     },
                     maxLength: {
                       value: 16,
-                      message: 'La contraseña no puede exceder los 16 caracteres'
+                      message: 'Máximo 16 caracteres'
                     },
                     pattern: {
                       value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/,
@@ -118,11 +109,7 @@ const Login = () => {
               </Form.Group>
 
               <div className="d-grid">
-                <Button 
-                  variant="primary" 
-                  type="submit"
-                  style={{ backgroundColor: '#34AEFF', border: 'none' }}
-                >
+                <Button variant="primary" type="submit">
                   Iniciar Sesión
                 </Button>
               </div>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Table, Button, Row, Col, Modal, Form, Card, Alert, Badge } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
+
 
 const PacienteDetalle = () => {
   const { nombrePaciente } = useParams();
@@ -57,22 +59,14 @@ const PacienteDetalle = () => {
 
   // Cargar observaciones guardadas al iniciar
   useEffect(() => {
-  const cargarObservaciones = () => {
-    try {
-      const storedData = localStorage.getItem('registrosObservaciones');
-      const guardadas = storedData ? JSON.parse(storedData) : [];
-      const filtradas = guardadas.filter(reg => 
-        reg && reg.pacienteId === nombrePaciente
-      );
+    const cargarObservaciones = () => {
+      const guardadas = JSON.parse(localStorage.getItem('registrosObservaciones') || []);
+      const filtradas = guardadas.filter(reg => reg.pacienteId === nombrePaciente);
       setRegistrosObservaciones(filtradas);
-    } catch (error) {
-      console.error("Error al cargar observaciones:", error);
-      setRegistrosObservaciones([]);
-    }
-  };
-  
-  cargarObservaciones();
-}, [nombrePaciente]);
+    };
+
+    cargarObservaciones();
+  }, [nombrePaciente]);
 
   // Manejar envío del formulario de signos vitales
   const onSubmitSignosVitales = (data) => {
@@ -136,7 +130,7 @@ const PacienteDetalle = () => {
   // Formatear cambios para mostrar en historial
   const formatCambios = (registro) => {
     const cambios = [];
-    
+
     // Procesar medicamentos
     Object.entries(registro.estadosMedicamentos || {}).forEach(([key, estado]) => {
       const [medId, horario] = key.split('-');
@@ -147,7 +141,7 @@ const PacienteDetalle = () => {
         estado
       });
     });
-    
+
     // Procesar heridas
     Object.entries(registro.estadosHeridas || {}).forEach(([key, estado]) => {
       const [heridaId, horario] = key.split('-');
@@ -158,17 +152,23 @@ const PacienteDetalle = () => {
         estado
       });
     });
-    
+
     return cambios;
   };
 
   // Guardar observación junto con los estados actuales
   const guardarObservacion = () => {
     if (observacion.trim() === '') {
-      alert('Por favor ingrese una observación');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'Debe ingresar una observación para registrar la visita',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#34AEFF'
+      });
       return;
     }
-
+  
     const nuevoRegistro = {
       id: Date.now(),
       fechaHora: new Date().toISOString(),
@@ -177,7 +177,7 @@ const PacienteDetalle = () => {
       estadosHeridas: { ...horariosHeridas },
       pacienteId: nombrePaciente
     };
-
+  
     // Actualizar estado
     const nuevasObservaciones = [...registrosObservaciones, nuevoRegistro];
     setRegistrosObservaciones(nuevasObservaciones);
@@ -189,12 +189,47 @@ const PacienteDetalle = () => {
       'registrosObservaciones', 
       JSON.stringify([...otrasObservaciones, nuevoRegistro])
     );
-
-    // Resetear y mostrar feedback
+  
+    // Resetear campos
     setObservacion('');
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    
+    // Calcular resumen de acciones
+    const medicamentosCompletos = Object.values(horariosMedicamentos).filter(
+      estado => estado === 'completo'
+    ).length;
+    
+    const heridasCompletas = Object.values(horariosHeridas).filter(
+      estado => estado === 'completo'
+    ).length;
+  
+    // Mostrar SweetAlert de éxito con resumen
+    Swal.fire({
+      title: '¡Visita registrada exitosamente!',
+      html: `
+        <div class="text-start">
+          <p>Resumen de la visita a <strong>${nombrePaciente}</strong>:</p>
+          <ul class="list-unstyled">
+            <li>✅ ${medicamentosCompletos} horarios de medicación completados</li>
+            <li>✅ ${heridasCompletas} curaciones de heridas realizadas</li>
+            <li>📝 Observación registrada</li>
+          </ul>
+          <small class="text-muted">${new Date().toLocaleString()}</small>
+        </div>
+      `,
+      icon: 'success',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#34AEFF',
+      background: '#f8f9fa',
+      width: '600px',
+      timer: 6000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
   };
+  
 
   return (
     <>
@@ -427,7 +462,7 @@ const PacienteDetalle = () => {
         <Card className="mb-4">
           <Card.Body>
             <h4>Observaciones</h4>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Registrar observación (máx. 300 caracteres)</Form.Label>
               <Form.Control
@@ -442,11 +477,11 @@ const PacienteDetalle = () => {
                 {observacion.length}/300 caracteres
               </Form.Text>
             </Form.Group>
-            
+
             <Row className="mt-3 g-2">
               <Col xs={6} md={3}>
-                <Button 
-                  variant="outline-primary" 
+                <Button
+                  variant="outline-primary"
                   className="w-100"
                   onClick={guardarObservacion}
                 >
