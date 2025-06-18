@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Table, Badge, Button, Row, Col } from 'react-bootstrap';
+import { Container, Table, Badge, Button, Row, Col, Modal, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 
 const PacienteDetalle = () => {
   const { nombrePaciente } = useParams();
+  const [showSignosVitales, setShowSignosVitales] = useState(false);
+  const [signosVitales, setSignosVitales] = useState([]);
+  
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   // Estados para el seguimiento de horarios
   const [horariosMedicamentos, setHorariosMedicamentos] = useState({});
@@ -42,6 +47,19 @@ const PacienteDetalle = () => {
         horarios: ['07:30', '15:30', '23:30']
       }
     ]
+  };
+
+  // Manejar envío del formulario de signos vitales
+  const onSubmitSignosVitales = (data) => {
+    const nuevoRegistro = {
+      ...data,
+      fecha: new Date().toISOString(),
+      pacienteId: nombrePaciente
+    };
+    
+    setSignosVitales([...signosVitales, nuevoRegistro]);
+    setShowSignosVitales(false);
+    reset();
   };
 
   // Manejar cambio de estado para medicamentos
@@ -90,10 +108,103 @@ const PacienteDetalle = () => {
           </div>
           <div className='d-flex flex-column'>
           <Button bg="info" className="fs-5 mb-2">Historia Clinica</Button>
-          <Button className="mt-3">Signos Vitales</Button>
+          <Button className="mt-3" onClick={() => setShowSignosVitales(true)}>Signos Vitales</Button>
           </div>
           <hr />
         </div>
+
+        {/* Modal para signos vitales */}
+        <Modal show={showSignosVitales} onHide={() => setShowSignosVitales(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Registrar Signos Vitales</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSubmit(onSubmitSignosVitales)}>
+              <Form.Group className="mb-3">
+                <Form.Label>Presión Arterial (mmHg)</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  placeholder="Ej: 120/80"
+                  {...register("presion", { 
+                    required: "Este campo es requerido",
+                    pattern: {
+                      value: /^\d{2,3}\/\d{2,3}$/,
+                      message: "Formato inválido (ej: 120/80)"
+                    }
+                  })}
+                />
+                {errors.presion && <span className="text-danger">{errors.presion.message}</span>}
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Temperatura (°C)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  step="0.1"
+                  placeholder="Ej: 36.5"
+                  {...register("temperatura", { 
+                    required: "Este campo es requerido",
+                    min: {
+                      value: 35,
+                      message: "La temperatura debe ser mayor a 35°C"
+                    },
+                    max: {
+                      value: 42,
+                      message: "La temperatura debe ser menor a 42°C"
+                    }
+                  })}
+                />
+                {errors.temperatura && <span className="text-danger">{errors.temperatura.message}</span>}
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Oxígeno en Sangre (%)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  placeholder="Ej: 98"
+                  {...register("oxigeno", { 
+                    required: "Este campo es requerido",
+                    min: {
+                      value: 70,
+                      message: "El valor debe ser mayor a 70%"
+                    },
+                    max: {
+                      value: 100,
+                      message: "El valor debe ser menor o igual a 100%"
+                    }
+                  })}
+                />
+                {errors.oxigeno && <span className="text-danger">{errors.oxigeno.message}</span>}
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Pulso (latidos/min)</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  placeholder="Ej: 75"
+                  {...register("pulso", { 
+                    required: "Este campo es requerido",
+                    min: {
+                      value: 40,
+                      message: "El pulso debe ser mayor a 40 lpm"
+                    },
+                    max: {
+                      value: 200,
+                      message: "El pulso debe ser menor a 200 lpm"
+                    }
+                  })}
+                />
+                {errors.pulso && <span className="text-danger">{errors.pulso.message}</span>}
+              </Form.Group>
+              
+              <div className="d-flex justify-content-end">
+                <Button variant="primary" type="submit">
+                  Guardar
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
 
         {/* Sección de medicamentos */}
         <div className="mb-5">
