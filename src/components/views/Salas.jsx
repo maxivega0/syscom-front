@@ -10,16 +10,16 @@ const Salas = () => {
   // Datos de ejemplo
   const habitacionesCriticas = [
     { numero: '202', ocupacion: '4/4' },
-    { numero: '201', ocupacion: '3/4' },
-    { numero: '206', ocupacion: '2/4' },
+    { numero: '201', ocupacion: '4/4' },
+    { numero: '206', ocupacion: '4/4' },
     { numero: '207', ocupacion: '4/4' }
   ];
 
   const habitacionesEnEspera = [
-    { numero: '205', ocupacion: '1/4' },
-    { numero: '203', ocupacion: '3/5' },
-    { numero: '204', ocupacion: '2/4' },
-    { numero: '208', ocupacion: '1/4' }
+    { numero: '205', ocupacion: '4/4' },
+    { numero: '203', ocupacion: '4/4' },
+    { numero: '204', ocupacion: '4/4' },
+    { numero: '208', ocupacion: '4/4' }
   ];
 
   // Función para dividir el array en dos columnas

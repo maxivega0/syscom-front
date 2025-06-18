@@ -21,26 +21,26 @@
     ],
     "salas": [
       {
-        "id": 1,
+        "id": 101,
         "cantidadHabitaciones": 2
       }
     ],
     "habitaciones": [
       {
-        "id": 1,
+        "id": 1001,
         "idSala": 1,
         "cantidadCamas": 2
       }
     ],
     "camas": [
       {
-        "id": 1,
+        "id": 10001,
         "idHabitacion": 1,
         "ocupada": true,
         "idPaciente": 1
       },
       {
-        "id": 2,
+        "id": 10001,
         "idHabitacion": 1,
         "ocupada": false,
         "idPaciente": null

@@ -15,9 +15,32 @@ const PacienteDetalle = () => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // Estados para el seguimiento de horarios
-  const [horariosMedicamentos, setHorariosMedicamentos] = useState({});
-  const [horariosHeridas, setHorariosHeridas] = useState({});
+  // Estados modificados para usar sessionStorage
+  const [horariosMedicamentos, setHorariosMedicamentos] = useState(() => {
+    const saved = sessionStorage.getItem(`horariosMedicamentos-${nombrePaciente}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [horariosHeridas, setHorariosHeridas] = useState(() => {
+    const saved = sessionStorage.getItem(`horariosHeridas-${nombrePaciente}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+ // Efecto para guardar en sessionStorage cuando cambian los estados
+  useEffect(() => {
+    sessionStorage.setItem(
+      `horariosMedicamentos-${nombrePaciente}`,
+      JSON.stringify(horariosMedicamentos)
+    );
+  }, [horariosMedicamentos, nombrePaciente]);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      `horariosHeridas-${nombrePaciente}`,
+      JSON.stringify(horariosHeridas)
+    );
+  }, [horariosHeridas, nombrePaciente]);
+
 
   // Datos de ejemplo
   const paciente = {
@@ -28,7 +51,7 @@ const PacienteDetalle = () => {
         id: 1,
         nombre: 'Paracetamol',
         via: 'Oral',
-        horarios: ['08:00', '12:00', '16:00', '20:00']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       },
       {
         id: 2,
@@ -40,14 +63,14 @@ const PacienteDetalle = () => {
         id: 3,
         nombre: 'Insulina',
         via: 'Subcutánea',
-        horarios: ['08:00', '12:00', '16:00', '23:30']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       }
     ],
     heridas: [
       {
         id: 1,
         nombre: 'Corte en brazo',
-        horarios: ['08:00', '12:00', '16:30', '20:00']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       },
       {
         id: 2,
@@ -72,6 +95,7 @@ const PacienteDetalle = () => {
 
     cargarObservaciones();
   }, [nombrePaciente]);
+
 
   // Manejar envío del formulario de signos vitales
   const onSubmitSignosVitales = (data) => {
@@ -98,20 +122,22 @@ const PacienteDetalle = () => {
     return herida ? herida.nombre : 'Herida desconocida';
   };
 
-  // Manejar cambio de estado para medicamentos
+   // Manejar cambio de estado para medicamentos (modificado para incluir sessionStorage)
   const handleEstadoMedicamento = (medId, horario, estado) => {
-    setHorariosMedicamentos(prev => ({
-      ...prev,
+    const newState = {
+      ...horariosMedicamentos,
       [`${medId}-${horario}`]: estado
-    }));
+    };
+    setHorariosMedicamentos(newState);
   };
 
-  // Manejar cambio de estado para heridas
+  // Manejar cambio de estado para heridas (modificado para incluir sessionStorage)
   const handleEstadoHerida = (heridaId, horario, estado) => {
-    setHorariosHeridas(prev => ({
-      ...prev,
+    const newState = {
+      ...horariosHeridas,
       [`${heridaId}-${horario}`]: estado
-    }));
+    };
+    setHorariosHeridas(newState);
   };
 
   // Obtener clase CSS según estado
