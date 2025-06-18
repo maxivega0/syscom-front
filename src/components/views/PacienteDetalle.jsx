@@ -25,6 +25,10 @@ const PacienteDetalle = () => {
     const saved = sessionStorage.getItem(`horariosHeridas-${nombrePaciente}`);
     return saved ? JSON.parse(saved) : {};
   });
+  const [ultimosSignosVitales, setUltimosSignosVitales] = useState(() => {
+  const saved = sessionStorage.getItem(`ultimosSignosVitales-${nombrePaciente}`);
+  return saved ? JSON.parse(saved) : null;
+});
 
  // Efecto para guardar en sessionStorage cuando cambian los estados
   useEffect(() => {
@@ -98,17 +102,45 @@ const PacienteDetalle = () => {
 
 
   // Manejar envío del formulario de signos vitales
-  const onSubmitSignosVitales = (data) => {
-    const nuevoRegistro = {
-      ...data,
-      fecha: new Date().toISOString(),
-      pacienteId: nombrePaciente
-    };
-
-    setSignosVitales([...signosVitales, nuevoRegistro]);
-    setShowSignosVitales(false);
-    reset();
+const onSubmitSignosVitales = (data) => {
+  const nuevoRegistro = {
+    ...data,
+    fecha: new Date().toISOString(),
+    pacienteId: nombrePaciente
   };
+
+    sessionStorage.setItem(
+    `ultimosSignosVitales-${nombrePaciente}`,
+    JSON.stringify(nuevoRegistro)
+  );
+
+    setUltimosSignosVitales(nuevoRegistro);
+  setSignosVitales([...signosVitales, nuevoRegistro]);
+  setShowSignosVitales(false);
+  reset();
+
+  Swal.fire({
+    title: '¡Signos vitales registrados!',
+    html: `
+      <div class="text-start">
+        <p>Los signos vitales de <strong>${nombrePaciente}</strong> se han guardado correctamente:</p>
+        <ul class="list-unstyled">
+          <li>🩸 Presión arterial: <strong>${data.presion}</strong> mmHg</li>
+          <li>🌡️ Temperatura: <strong>${data.temperatura}</strong> °C</li>
+          <li>💨 Oxígeno: <strong>${data.oxigeno}</strong> %</li>
+          <li>💓 Pulso: <strong>${data.pulso}</strong> lpm</li>
+        </ul>
+        <small class="text-muted">${new Date().toLocaleString()}</small>
+      </div>
+    `,
+    icon: 'success',
+    confirmButtonText: 'Aceptar',
+    confirmButtonColor: '#34AEFF',
+    width: '600px',
+    timer: 5000,
+    timerProgressBar: true
+  });
+};
 
   // Obtener nombre de medicamento por ID
   const getNombreMedicamento = (id) => {
@@ -310,96 +342,115 @@ const guardarObservacion = () => {
 
         {/* Modal para signos vitales */}
         <Modal show={showSignosVitales} onHide={() => setShowSignosVitales(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Registrar Signos Vitales</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={handleSubmit(onSubmitSignosVitales)}>
-              <Form.Group className="mb-3">
-                <Form.Label>Presión Arterial (mmHg)</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ej: 120/80"
-                  {...register("presion", {
-                    required: "Este campo es requerido",
-                    pattern: {
-                      value: /^\d{2,3}\/\d{2,3}$/,
-                      message: "Formato inválido (ej: 120/80)"
-                    }
-                  })}
-                />
-                {errors.presion && <span className="text-danger">{errors.presion.message}</span>}
-              </Form.Group>
+  <Modal.Header closeButton>
+    <Modal.Title>Registrar Signos Vitales</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {ultimosSignosVitales && (
+      <Alert variant="info" className="mb-4">
+        <h5>Último registro:</h5>
+        <div className="d-flex flex-wrap justify-content-between">
+          <div><strong>Presión:</strong> {ultimosSignosVitales.presion}</div>
+          <div><strong>Temperatura:</strong> {ultimosSignosVitales.temperatura}°C</div>
+          <div><strong>Oxígeno:</strong> {ultimosSignosVitales.oxigeno}%</div>
+          <div><strong>Pulso:</strong> {ultimosSignosVitales.pulso} lpm</div>
+          <div className="text-muted small">
+            {new Date(ultimosSignosVitales.fecha).toLocaleString()}
+          </div>
+        </div>
+      </Alert>
+    )}
+    
+    <Form onSubmit={handleSubmit(onSubmitSignosVitales)}>
+      <Form.Group className="mb-3">
+        <Form.Label>Presión Arterial (mmHg)</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Ej: 120/80"
+          defaultValue={ultimosSignosVitales?.presion || ''}
+          {...register("presion", {
+            required: "Este campo es requerido",
+            pattern: {
+              value: /^\d{2,3}\/\d{2,3}$/,
+              message: "Formato inválido (ej: 120/80)"
+            }
+          })}
+        />
+        {errors.presion && <span className="text-danger">{errors.presion.message}</span>}
+      </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Temperatura (°C)</Form.Label>
-                <Form.Control
-                  type="number"
-                  step="0.1"
-                  placeholder="Ej: 36.5"
-                  {...register("temperatura", {
-                    required: "Este campo es requerido",
-                    min: {
-                      value: 35,
-                      message: "La temperatura debe ser mayor a 35°C"
-                    },
-                    max: {
-                      value: 42,
-                      message: "La temperatura debe ser menor a 42°C"
-                    }
-                  })}
-                />
-                {errors.temperatura && <span className="text-danger">{errors.temperatura.message}</span>}
-              </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Temperatura (°C)</Form.Label>
+        <Form.Control
+          type="number"
+          step="0.1"
+          placeholder="Ej: 36.5"
+          defaultValue={ultimosSignosVitales?.temperatura || ''}
+          {...register("temperatura", {
+            required: "Este campo es requerido",
+            min: {
+              value: 35,
+              message: "La temperatura debe ser mayor a 35°C"
+            },
+            max: {
+              value: 42,
+              message: "La temperatura debe ser menor a 42°C"
+            }
+          })}
+        />
+        {errors.temperatura && <span className="text-danger">{errors.temperatura.message}</span>}
+      </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Oxígeno en Sangre (%)</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Ej: 98"
-                  {...register("oxigeno", {
-                    required: "Este campo es requerido",
-                    min: {
-                      value: 70,
-                      message: "El valor debe ser mayor a 70%"
-                    },
-                    max: {
-                      value: 100,
-                      message: "El valor debe ser menor o igual a 100%"
-                    }
-                  })}
-                />
-                {errors.oxigeno && <span className="text-danger">{errors.oxigeno.message}</span>}
-              </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Oxígeno en Sangre (%)</Form.Label>
+        <Form.Control
+          type="number"
+          placeholder="Ej: 98"
+          defaultValue={ultimosSignosVitales?.oxigeno || ''}
+          {...register("oxigeno", {
+            required: "Este campo es requerido",
+            min: {
+              value: 70,
+              message: "El valor debe ser mayor a 70%"
+            },
+            max: {
+              value: 100,
+              message: "El valor debe ser menor o igual a 100%"
+            }
+          })}
+        />
+        {errors.oxigeno && <span className="text-danger">{errors.oxigeno.message}</span>}
+      </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Pulso (latidos/min)</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Ej: 75"
-                  {...register("pulso", {
-                    required: "Este campo es requerido",
-                    min: {
-                      value: 40,
-                      message: "El pulso debe ser mayor a 40 lpm"
-                    },
-                    max: {
-                      value: 200,
-                      message: "El pulso debe ser menor a 200 lpm"
-                    }
-                  })}
-                />
-                {errors.pulso && <span className="text-danger">{errors.pulso.message}</span>}
-              </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Pulso (latidos/min)</Form.Label>
+        <Form.Control
+          type="number"
+          placeholder="Ej: 75"
+          defaultValue={ultimosSignosVitales?.pulso || ''}
+          {...register("pulso", {
+            required: "Este campo es requerido",
+            min: {
+              value: 40,
+              message: "El pulso debe ser mayor a 40 lpm"
+            },
+            max: {
+              value: 200,
+              message: "El pulso debe ser menor a 200 lpm"
+            }
+          })}
+        />
+        {errors.pulso && <span className="text-danger">{errors.pulso.message}</span>}
+      </Form.Group>
 
-              <div className="d-flex justify-content-end">
-                <Button variant="primary" type="submit">
-                  Guardar
-                </Button>
-              </div>
-            </Form>
-          </Modal.Body>
-        </Modal>
+      <div className="d-flex justify-content-end">
+        <Button variant="primary" type="submit">
+          Guardar
+        </Button>
+      </div>
+    </Form>
+  </Modal.Body>
+</Modal>
 
         {/* Sección de medicamentos */}
         <Card className="mb-5">
