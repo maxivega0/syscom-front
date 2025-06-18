@@ -57,14 +57,12 @@ syscom-front/
 ├── src/
 │   ├── assets/           # Imágenes y recursos estáticos
 │   ├── components/       # Componentes reutilizables (botones, modales, tablas, etc.)
-│   ├── hooks/            # Hooks personalizados
-│   ├── pages/            # Vistas principales (Home, Pacientes, Registro, etc.)
+│   ├── views/            # Vistas principales (Home, Pacientes, Registro, etc.)
 │   ├── routes/           # Definición de rutas
 │   ├── services/         # Llamadas a la API y lógica de negocio
-│   ├── utils/            # Utilidades y helpers
+│   ├── helpers.js/            # Utilidades y helpers
 │   ├── App.jsx           # Componente raíz
 │   ├── main.jsx          # Punto de entrada de la app
 ├── package.json          # Dependencias y scripts
-├── tailwind.config.js    # Configuración de Tailwind
 ├── vite.config.js        # Configuración de Vite
 └── README.md             # Este archivo
