@@ -1,18 +1,5 @@
-<<<<<<< HEAD
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
 # syscom-front
+<<<<<<< HEAD
 >>>>>>> 2858138ce23ade8bf8c309482695557d173099a3
 
 
@@ -20,3 +7,72 @@ If you are developing a production application, we recommend using TypeScript wi
 
 levantar db:
 json-server --watch db.json --port 3000
+=======
+
+Sistema de seguimiento para enfermeros en un hospital.
+
+Este proyecto permite a los enfermeros registrar en tiempo real las visitas realizadas a los pacientes, detallando:
+- Dosis suministradas
+- Heridas tratadas
+- Observaciones relevantes sobre el estado del paciente
+
+El objetivo es mejorar el control, la trazabilidad y la calidad del seguimiento médico en internación.
+
+---
+
+## Integrantes
+
+| Legajo  | Nombre                        |
+|---------|-------------------------------|
+| 53223   | Galindo Lobo Martina          |
+| 51366   | Morhill Samir                 |
+| 53493   | Vega Maximiliano Leonel       |
+
+---
+
+## Tecnologías y Librerías utilizadas
+
+- **React**  
+- **Vite**  
+- **React Bootstrap**  
+- **React Router Dom**  
+- **React Icons**
+- **React Hook Form**
+- **SweetAlert**
+
+---
+
+
+# Clonar el repositorio
+git clone https://github.com/maxivega0/syscom-front.git
+
+# Moverse a la carpeta
+cd syscom-front
+
+# Instalar las dependencias
+npm install
+
+# Iniciar el servidor de desarrollo
+npm run dev
+
+
+------
+
+## Estructura del proyecto
+
+```text
+syscom-front/
+├── public/               # Archivos públicos (favicon, etc.)
+├── src/
+│   ├── assets/           # Imágenes y recursos estáticos
+│   ├── components/       # Componentes reutilizables (botones, modales, tablas, etc.)
+│   ├── views/            # Vistas principales (Home, Pacientes, Registro, etc.)
+│   ├── routes/           # Definición de rutas
+│   ├── services/         # Llamadas a la API y lógica de negocio
+│   ├── helpers.js/            # Utilidades y helpers
+│   ├── App.jsx           # Componente raíz
+│   ├── main.jsx          # Punto de entrada de la app
+├── package.json          # Dependencias y scripts
+├── vite.config.js        # Configuración de Vite
+└── README.md             # Este archivo
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09

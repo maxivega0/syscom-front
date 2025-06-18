@@ -21,26 +21,42 @@
     ],
     "salas": [
       {
+<<<<<<< HEAD
         "id": 1,
+=======
+        "id": 101,
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
         "cantidadHabitaciones": 2
       }
     ],
     "habitaciones": [
       {
+<<<<<<< HEAD
         "id": 1,
+=======
+        "id": 1001,
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
         "idSala": 1,
         "cantidadCamas": 2
       }
     ],
     "camas": [
       {
+<<<<<<< HEAD
         "id": 1,
+=======
+        "id": 10001,
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
         "idHabitacion": 1,
         "ocupada": true,
         "idPaciente": 1
       },
       {
+<<<<<<< HEAD
         "id": 2,
+=======
+        "id": 10001,
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
         "idHabitacion": 1,
         "ocupada": false,
         "idPaciente": null

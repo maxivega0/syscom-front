@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "routes": [
     {
       "handle": "filesystem"
@@ -12,6 +13,8 @@
   ]
 }
 =======
+=======
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
     "routes": [
       {
         "handle": "filesystem"
@@ -22,5 +25,9 @@
         "status": 200
       }
     ]
+<<<<<<< HEAD
   }
 >>>>>>> c7103189713c104f2acadbd7117d6ac81b772bc7
+=======
+  }
+>>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09

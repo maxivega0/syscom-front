@@ -15,9 +15,32 @@ const PacienteDetalle = () => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // Estados para el seguimiento de horarios
-  const [horariosMedicamentos, setHorariosMedicamentos] = useState({});
-  const [horariosHeridas, setHorariosHeridas] = useState({});
+  // Estados modificados para usar sessionStorage
+  const [horariosMedicamentos, setHorariosMedicamentos] = useState(() => {
+    const saved = sessionStorage.getItem(`horariosMedicamentos-${nombrePaciente}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [horariosHeridas, setHorariosHeridas] = useState(() => {
+    const saved = sessionStorage.getItem(`horariosHeridas-${nombrePaciente}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+ // Efecto para guardar en sessionStorage cuando cambian los estados
+  useEffect(() => {
+    sessionStorage.setItem(
+      `horariosMedicamentos-${nombrePaciente}`,
+      JSON.stringify(horariosMedicamentos)
+    );
+  }, [horariosMedicamentos, nombrePaciente]);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      `horariosHeridas-${nombrePaciente}`,
+      JSON.stringify(horariosHeridas)
+    );
+  }, [horariosHeridas, nombrePaciente]);
+
 
   // Datos de ejemplo
   const paciente = {
@@ -28,7 +51,7 @@ const PacienteDetalle = () => {
         id: 1,
         nombre: 'Paracetamol',
         via: 'Oral',
-        horarios: ['08:00', '12:00', '16:00', '20:00']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       },
       {
         id: 2,
@@ -40,14 +63,14 @@ const PacienteDetalle = () => {
         id: 3,
         nombre: 'Insulina',
         via: 'Subcutánea',
-        horarios: ['08:00', '12:00', '16:00', '23:30']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       }
     ],
     heridas: [
       {
         id: 1,
         nombre: 'Corte en brazo',
-        horarios: ['08:00', '12:00', '16:30', '20:00']
+        horarios: ['02:00', '08:00', '14:00', '20:00']
       },
       {
         id: 2,
@@ -72,6 +95,7 @@ const PacienteDetalle = () => {
 
     cargarObservaciones();
   }, [nombrePaciente]);
+
 
   // Manejar envío del formulario de signos vitales
   const onSubmitSignosVitales = (data) => {
@@ -98,20 +122,22 @@ const PacienteDetalle = () => {
     return herida ? herida.nombre : 'Herida desconocida';
   };
 
-  // Manejar cambio de estado para medicamentos
+   // Manejar cambio de estado para medicamentos (modificado para incluir sessionStorage)
   const handleEstadoMedicamento = (medId, horario, estado) => {
-    setHorariosMedicamentos(prev => ({
-      ...prev,
+    const newState = {
+      ...horariosMedicamentos,
       [`${medId}-${horario}`]: estado
-    }));
+    };
+    setHorariosMedicamentos(newState);
   };
 
-  // Manejar cambio de estado para heridas
+  // Manejar cambio de estado para heridas (modificado para incluir sessionStorage)
   const handleEstadoHerida = (heridaId, horario, estado) => {
-    setHorariosHeridas(prev => ({
-      ...prev,
+    const newState = {
+      ...horariosHeridas,
       [`${heridaId}-${horario}`]: estado
-    }));
+    };
+    setHorariosHeridas(newState);
   };
 
   // Obtener clase CSS según estado
@@ -160,81 +186,106 @@ const PacienteDetalle = () => {
 
     return cambios;
   };
-
-  // Guardar observación junto con los estados actuales
-  const guardarObservacion = () => {
-    if (observacion.trim() === '') {
-      Swal.fire({
-        title: 'Campo requerido',
-        text: 'Debe ingresar una observación para registrar la visita',
-        icon: 'warning',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#34AEFF'
-      });
-      return;
-    }
-  
-    const nuevoRegistro = {
-      id: Date.now(),
-      fechaHora: new Date().toISOString(),
-      observacion: observacion.trim(),
-      estadosMedicamentos: { ...horariosMedicamentos },
-      estadosHeridas: { ...horariosHeridas },
-      pacienteId: nombrePaciente
-    };
-  
-    // Actualizar estado
-    const nuevasObservaciones = [...registrosObservaciones, nuevoRegistro];
-    setRegistrosObservaciones(nuevasObservaciones);
-    
-    // Guardar en localStorage
-    const todasObservaciones = JSON.parse(localStorage.getItem('registrosObservaciones') || '[]');
-    const otrasObservaciones = todasObservaciones.filter(reg => reg.id !== nuevoRegistro.id);
-    localStorage.setItem(
-      'registrosObservaciones', 
-      JSON.stringify([...otrasObservaciones, nuevoRegistro])
-    );
-  
-    // Resetear campos
-    setObservacion('');
-    
-    // Calcular resumen de acciones
-    const medicamentosCompletos = Object.values(horariosMedicamentos).filter(
-      estado => estado === 'completo'
-    ).length;
-    
-    const heridasCompletas = Object.values(horariosHeridas).filter(
-      estado => estado === 'completo'
-    ).length;
-  
-    // Mostrar SweetAlert de éxito con resumen
+// Función para guardar observación con confirmación
+const guardarObservacion = () => {
+  if (observacion.trim() === '') {
     Swal.fire({
-      title: '¡Visita registrada exitosamente!',
-      html: `
-        <div class="text-start">
-          <p>Resumen de la visita a <strong>${nombrePaciente}</strong>:</p>
-          <ul class="list-unstyled">
-            <li>✅ ${medicamentosCompletos} horarios de medicación completados</li>
-            <li>✅ ${heridasCompletas} curaciones de heridas realizadas</li>
-            <li>📝 Observación registrada</li>
-          </ul>
-          <small class="text-muted">${new Date().toLocaleString()}</small>
-        </div>
-      `,
-      icon: 'success',
-      confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#34AEFF',
-      background: '#f8f9fa',
-      width: '600px',
-      timer: 6000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer);
-        toast.addEventListener('mouseleave', Swal.resumeTimer);
-      }
+      title: 'Campo requerido',
+      text: 'Debe ingresar una observación para registrar la visita',
+      icon: 'warning',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#34AEFF'
     });
-  };
+    return;
+  }
+
+  // Calcular resumen de cambios
+  const medicamentosCompletos = Object.values(horariosMedicamentos).filter(
+    estado => estado === 'completo'
+  ).length;
   
+  const heridasCompletas = Object.values(horariosHeridas).filter(
+    estado => estado === 'completo'
+  ).length;
+
+  // Mostrar SweetAlert de confirmación con los cambios
+  Swal.fire({
+    title: 'Confirmar cambios',
+    html: `
+      <div class="text-start">
+        <p>Estás a punto de registrar los siguientes cambios para <strong>${nombrePaciente}</strong>:</p>
+        <ul class="list-unstyled">
+          ${medicamentosCompletos > 0 ? `<li>💊 ${medicamentosCompletos} medicamentos administrados</li>` : ''}
+          ${heridasCompletas > 0 ? `<li>🩹 ${heridasCompletas} curaciones realizadas</li>` : ''}
+          <li>📝 Observación: "${observacion.trim()}"</li>
+        </ul>
+        <p>¿Deseas continuar con el registro?</p>
+      </div>
+    `,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, registrar cambios',
+    cancelButtonText: 'No, revisar nuevamente',
+    confirmButtonColor: '#34AEFF',
+    cancelButtonColor: '#6c757d',
+    width: '600px',
+    backdrop: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Proceder con el registro
+      const nuevoRegistro = {
+        id: Date.now(),
+        fechaHora: new Date().toISOString(),
+        observacion: observacion.trim(),
+        estadosMedicamentos: { ...horariosMedicamentos },
+        estadosHeridas: { ...horariosHeridas },
+        pacienteId: nombrePaciente
+      };
+
+      // Actualizar estado
+      const nuevasObservaciones = [...registrosObservaciones, nuevoRegistro];
+      setRegistrosObservaciones(nuevasObservaciones);
+      
+      // Guardar en localStorage
+      const todasObservaciones = JSON.parse(localStorage.getItem('registrosObservaciones') || '[]');
+      const otrasObservaciones = todasObservaciones.filter(reg => reg.id !== nuevoRegistro.id);
+      localStorage.setItem(
+        'registrosObservaciones', 
+        JSON.stringify([...otrasObservaciones, nuevoRegistro])
+      );
+
+      // Resetear campos
+      setObservacion('');
+
+      // Mostrar SweetAlert de éxito
+      Swal.fire({
+        title: '¡Cambios registrados con éxito!',
+        html: `
+          <div class="text-start">
+            <p>Los cambios para <strong>${nombrePaciente}</strong> han sido guardados:</p>
+            <ul class="list-unstyled">
+              ${medicamentosCompletos > 0 ? `<li>✅ ${medicamentosCompletos} medicamentos administrados</li>` : ''}
+              ${heridasCompletas > 0 ? `<li>✅ ${heridasCompletas} curaciones realizadas</li>` : ''}
+              <li>📝 Observación registrada</li>
+            </ul>
+            <small class="text-muted">${new Date().toLocaleString()}</small>
+          </div>
+        `,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#34AEFF',
+        background: '#f8f9fa',
+        width: '600px',
+        timer: 6000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+      });
+    }
+  });
+};
 
   return (
     <>
