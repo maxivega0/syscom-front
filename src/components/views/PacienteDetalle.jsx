@@ -57,14 +57,22 @@ const PacienteDetalle = () => {
 
   // Cargar observaciones guardadas al iniciar
   useEffect(() => {
-    const cargarObservaciones = () => {
-      const guardadas = JSON.parse(localStorage.getItem('registrosObservaciones') || []);
-      const filtradas = guardadas.filter(reg => reg.pacienteId === nombrePaciente);
+  const cargarObservaciones = () => {
+    try {
+      const storedData = localStorage.getItem('registrosObservaciones');
+      const guardadas = storedData ? JSON.parse(storedData) : [];
+      const filtradas = guardadas.filter(reg => 
+        reg && reg.pacienteId === nombrePaciente
+      );
       setRegistrosObservaciones(filtradas);
-    };
-    
-    cargarObservaciones();
-  }, [nombrePaciente]);
+    } catch (error) {
+      console.error("Error al cargar observaciones:", error);
+      setRegistrosObservaciones([]);
+    }
+  };
+  
+  cargarObservaciones();
+}, [nombrePaciente]);
 
   // Manejar envío del formulario de signos vitales
   const onSubmitSignosVitales = (data) => {
