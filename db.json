@@ -1,0 +1,61 @@
+{
+    "pacientes": [
+      {
+        "id": 1,
+        "dni": "12345678",
+        "nombre": "Juan",
+        "apellido": "Pérez",
+        "fechaNacimiento": "1985-07-10",
+        "domicilio": "Calle Falsa 123",
+        "telefono": "1123456789",
+        "obraSocial": "OSDE",
+        "foto": "juan.jpg"
+      }
+    ],
+    "usuarios": [
+      {
+        "nombreUsuario": "admin",
+        "contraseña": "1234",
+        "email": "admin@hospital.com"
+      }
+    ],
+    "salas": [
+      {
+        "id": 1,
+        "cantidadHabitaciones": 2
+      }
+    ],
+    "habitaciones": [
+      {
+        "id": 1,
+        "idSala": 1,
+        "cantidadCamas": 2
+      }
+    ],
+    "camas": [
+      {
+        "id": 1,
+        "idHabitacion": 1,
+        "ocupada": true,
+        "idPaciente": 1
+      },
+      {
+        "id": 2,
+        "idHabitacion": 1,
+        "ocupada": false,
+        "idPaciente": null
+      }
+    ],
+    "signosVitales": [
+      {
+        "id": 1,
+        "idPaciente": 1,
+        "hora": "2025-06-18T20:00:00",
+        "presion": "120/80",
+        "temperatura": 36.6,
+        "oxigeno": 98,
+        "pulso": 72
+      }
+    ]
+  }
+  

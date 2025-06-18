@@ -14,3 +14,9 @@ If you are developing a production application, we recommend using TypeScript wi
 =======
 # syscom-front
 >>>>>>> 2858138ce23ade8bf8c309482695557d173099a3
+
+
+
+
+levantar db:
+json-server --watch db.json --port 3000

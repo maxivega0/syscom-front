@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "routes": [
     {
       "handle": "filesystem"
@@ -10,3 +11,16 @@
     }
   ]
 }
+=======
+    "routes": [
+      {
+        "handle": "filesystem"
+      },
+      {
+        "src": "/.*",
+        "dest": "/index.html",
+        "status": 200
+      }
+    ]
+  }
+>>>>>>> c7103189713c104f2acadbd7117d6ac81b772bc7
