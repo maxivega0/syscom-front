@@ -60,9 +60,14 @@ const PacienteDetalle = () => {
   // Cargar observaciones guardadas al iniciar
   useEffect(() => {
     const cargarObservaciones = () => {
-      const guardadas = JSON.parse(localStorage.getItem('registrosObservaciones') || []);
-      const filtradas = guardadas.filter(reg => reg.pacienteId === nombrePaciente);
-      setRegistrosObservaciones(filtradas);
+      try {
+        const guardadas = JSON.parse(localStorage.getItem('registrosObservaciones') ?? '[]');
+        const filtradas = guardadas.filter(reg => reg.pacienteId === nombrePaciente);
+        setRegistrosObservaciones(filtradas);
+      } catch (error) {
+        console.error("Error al leer observaciones:", error);
+        setRegistrosObservaciones([]);
+      }
     };
 
     cargarObservaciones();
