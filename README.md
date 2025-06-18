@@ -25,13 +25,11 @@ El objetivo es mejorar el control, la trazabilidad y la calidad del seguimiento 
 
 - **React**  
 - **Vite**  
-- **Tailwind CSS**  
+- **React Bootstrap**  
 - **React Router Dom**  
-- **Axios**  
-- **Heroicons** (para íconos)  
-- **React Hook Form** (para formularios, si corresponde)  
-- **Zod** (para validaciones, si corresponde)  
-- **React Toastify** (para notificaciones, si corresponde)  
+- **React Icons**
+- **React Hook Form**
+- **SweetAlert**
 
 ---
 
