@@ -33,8 +33,25 @@ El objetivo es mejorar el control, la trazabilidad y la calidad del seguimiento 
 
 ---
 
+
+# Clonar el repositorio
+git clone https://github.com/maxivega0/syscom-front.git
+
+# Moverse a la carpeta
+cd syscom-front
+
+# Instalar las dependencias
+npm install
+
+# Iniciar el servidor de desarrollo
+npm run dev
+
+
+------
+
 ## Estructura del proyecto
 
+```text
 syscom-front/
 ├── public/               # Archivos públicos (favicon, etc.)
 ├── src/
@@ -51,17 +68,3 @@ syscom-front/
 ├── tailwind.config.js    # Configuración de Tailwind
 ├── vite.config.js        # Configuración de Vite
 └── README.md             # Este archivo
-
-
-
-# Clonar el repositorio
-git clone https://github.com/maxivega0/syscom-front.git
-
-# Moverse a la carpeta
-cd syscom-front
-
-# Instalar las dependencias
-npm install
-
-# Iniciar el servidor de desarrollo
-npm run dev
