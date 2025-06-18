@@ -335,7 +335,7 @@ const guardarObservacion = () => {
           </div>
           <div className='d-flex flex-column'>
             <Button bg="info" className="fs-5 mb-2">Historia Clinica</Button>
-            <Button className="mt-3" onClick={() => setShowSignosVitales(true)}>Signos Vitales</Button>
+            <Button className="fs-5 mt-3" onClick={() => setShowSignosVitales(true)}>Signos Vitales</Button>
           </div>
           <hr />
         </div>
