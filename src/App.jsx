@@ -12,6 +12,7 @@ import Salas from './components/views/Salas';
 import PacientesSala from './components/views/PacientesSala';
 import PacienteDetalle from './components/views/PacienteDetalle';
 import Layout from './components/common/Layout';
+import Login from './components/views/Login';
 
 const MySwal = withReactContent(Swal); // Configuración de SweetAlert2 con React
 
@@ -27,6 +28,7 @@ function App() {
       <Route path="/" element={<Salas />} />
       <Route path="/pacientes/:numeroSala" element={<PacientesSala />} />
       <Route path="/paciente/:nombrePaciente" element={<PacienteDetalle />} />
+      <Route path="/login" element={<Login />} />
       </Routes>
       
     </Layout>
