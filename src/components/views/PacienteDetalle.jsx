@@ -213,19 +213,20 @@ const PacienteDetalle = () => {
           <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
-                <th>Horarios</th>        
                 <th>Medicamento</th>
+                <th>Horarios</th>        
               </tr>
             </thead>
             <tbody>
               {paciente.medicamentos.map((med) => (
                 <React.Fragment key={med.id}>
                   <tr>
-                    <td colSpan={2} className="text-center"><strong>{med.nombre}</strong></td>
-                    </tr>
-                    <tr>
+                    
                     <td>
-                      <div className="d-flex flex-wrap gap-2">
+                    <td colSpan={2} className="text-center"><strong>{med.nombre}</strong></td>
+                    </td>
+                    <td className='text-center'>
+                      <div className="d-flex flex-wrap gap-2 justify-content-center">
                         {med.horarios.map(horario => {
                           const estado = horariosMedicamentos[`${med.id}-${horario}`] || 'pendiente';
                           return (
@@ -233,13 +234,11 @@ const PacienteDetalle = () => {
                               key={`${med.id}-${horario}`}
                               
                             >
-                               - {horario} 
+                               {horario} -
                             </p>
                           );
                         })}
                       </div>
-                    </td>
-                    <td>
                       {med.horarios.map(horario => {
                           const estado = horariosMedicamentos[`${med.id}-${horario}`] || 'pendiente';
                           return (
