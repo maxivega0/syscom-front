@@ -330,15 +330,45 @@ const guardarObservacion = () => {
       <Container className="mt-4">
         {/* Encabezado del paciente */}
         <div className="mb-4 d-flex justify-content-between">
-          <div>
-            <h1>{paciente.nombre}</h1>
+  <div>
+    <h1>{paciente.nombre}</h1>
+    {ultimosSignosVitales && (
+      <div className="signos-vitales-container mt-2">
+        <h5 className="mb-2">Últimos signos vitales:</h5>
+        <div className="d-flex flex-wrap gap-4">
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">🩸 Presión:</span>
+            <span className="signo-vital-value">{ultimosSignosVitales.presion}</span>
           </div>
-          <div className='d-flex flex-column'>
-            <Button bg="info" className="fs-5 mb-2">Historia Clinica</Button>
-            <Button className="fs-5 mt-3" onClick={() => setShowSignosVitales(true)}>Signos Vitales</Button>
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">🌡️ Temp:</span>
+            <span className="signo-vital-value">{ultimosSignosVitales.temperatura}°C</span>
           </div>
-          <hr />
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">💨 Oxígeno:</span>
+            <span className="signo-vital-value">{ultimosSignosVitales.oxigeno}%</span>
+          </div>
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">💓 Pulso:</span>
+            <span className="signo-vital-value">{ultimosSignosVitales.pulso} lpm</span>
+          </div>
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">⏱️ Hora:</span>
+            <span className="signo-vital-value">
+              {new Date(ultimosSignosVitales.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            </span>
+          </div>
         </div>
+      </div>
+    )}
+  </div>
+  <div className='d-flex flex-column'>
+    <Button bg="info" className="fs-5 mb-2">Historia Clinica</Button>
+    <Button className="mt-3" onClick={() => setShowSignosVitales(true)}>
+      {ultimosSignosVitales ? 'Actualizar' : 'Registrar'} Signos Vitales
+    </Button>
+  </div>
+</div>
 
         {showSuccess && (
           <Alert variant="success" onClose={() => setShowSuccess(false)} dismissible>
