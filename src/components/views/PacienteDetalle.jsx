@@ -358,6 +358,12 @@ const guardarObservacion = () => {
               {new Date(ultimosSignosVitales.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
             </span>
           </div>
+          <div className="signo-vital-item">
+            <span className="signo-vital-label">📅 Fecha:</span>
+            <span className="signo-vital-value">
+              {new Date(ultimosSignosVitales.fecha).toLocaleDateString()}
+            </span>
+          </div>
         </div>
       </div>
     )}
