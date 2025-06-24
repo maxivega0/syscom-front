@@ -622,7 +622,7 @@ const guardarObservacion = () => {
             </Form.Group>
 
             <Row className="mt-3 g-2">
-              <Col xs={6} md={3}>
+              <Col xs={6} md={4}>
                 <Button
                   variant="outline-primary"
                   className="w-100"
@@ -631,15 +631,12 @@ const guardarObservacion = () => {
                   REGISTRAR
                 </Button>
               </Col>
-              <Col xs={6} md={3}>
-                <Button variant="outline-secondary" className="w-100">Otros</Button>
-              </Col>
-              <Col xs={6} md={3}>
+              <Col xs={6} md={4}>
                 <Button variant="outline-danger" as={Link} to={`/pacientes`} className="w-100">
                   Atras
                 </Button>
               </Col>
-              <Col xs={6} md={3}>
+              <Col xs={6} md={4}>
                 <Button variant="outline-success" className="w-100">Progreso</Button>
               </Col>
             </Row>
