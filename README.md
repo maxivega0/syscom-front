@@ -1,12 +1,4 @@
 # syscom-front
-<<<<<<< HEAD
->>>>>>> 2858138ce23ade8bf8c309482695557d173099a3
-
-
-
-
-levantar db:
-json-server --watch db.json --port 3000
 =======
 
 Sistema de seguimiento para enfermeros en un hospital.
@@ -76,3 +68,7 @@ syscom-front/
 ├── vite.config.js        # Configuración de Vite
 └── README.md             # Este archivo
 >>>>>>> 0ed2e0435d5e9a868f1abb5d4b83ef52c7a08f09
+
+````
+levantar db:
+json-server --watch db.json --port 3000
